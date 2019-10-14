@@ -7,7 +7,8 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 const required=(val)=>val&&val.length;
 const maxlength=(len)=>(val)=>!(val)||(val.length<=len);
 const minlength=(len)=>(val)=>(val)&&(val.length>=len);
- class ComponentForm extends Component {
+
+class ComponentForm extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -24,9 +25,7 @@ const minlength=(len)=>(val)=>(val)&&(val.length>=len);
         );
     }
     handleSubmit(values){
-        console.log('Current state is:'+JSON.stringify(values));
-        alert('Current state is:'+JSON.stringify(values));
-        //event.preventDefault();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
     
     render() {
@@ -52,9 +51,9 @@ const minlength=(len)=>(val)=>(val)&&(val.length>=len);
 </Col>
 </Row>
 <Row className="form-group">
-    <Label htmlFor="Name" md={2}>Name</Label>
+    <Label htmlFor="author" md={2}>Name</Label>
     <Col md={10}>
-        <Control.text model=".Name" id="Name" placeholder="Your Name" className="form-control" 
+        <Control.text model=".author" id="author" placeholder="Your Name" className="form-control" 
         validators={{
             required,
             minlength:minlength(2),maxlength:maxlength(15)}}/>
@@ -69,9 +68,9 @@ const minlength=(len)=>(val)=>(val)&&(val.length>=len);
 
 
 <Row className="form-group">
-     <Label htmlFor="message" md={2}> Comment</Label>
+     <Label htmlFor="comment" md={2}> Comment</Label>
         <Col md={10}>
-        <Control.textarea model=".message" id="message" name="message"  rows="6"className="form-control" />
+        <Control.textarea model=".comment" id="comment" name="comment"  rows="6"className="form-control" />
         </Col>
 </Row>
 <Row className="form-group">
@@ -108,7 +107,7 @@ const minlength=(len)=>(val)=>(val)&&(val.length>=len);
         
     
 
-    function RenderComments({comments}){
+    function RenderComments({comments,addComment,dishId}){
     
         if (comments != null)
         {
@@ -125,8 +124,10 @@ const minlength=(len)=>(val)=>(val)&&(val.length>=len);
                 </li>
                   ); 
                  } )}
-                </ul>                        
+                </ul>  
+                <ComponentForm dishId={dishId} addComment={addComment}/>                  
                 </div>
+                
             );
            
             
@@ -149,12 +150,12 @@ const minlength=(len)=>(val)=>(val)&&(val.length>=len);
                     </div>                
                 </div>
                 <div className="row">
-                <div className="col-12 col-md-5 m-3">
+                <div className="col-12 col-md-5 m-1">
                         <RenderDish dish={props.dish} />
                         </div>
-                        <div className="col-12 col-md-5 m-3">
-                        <RenderComments comments={props.comments} />
-                        <ComponentForm/>
+                        <div className="col-12 col-md-5 m-1">
+                        <RenderComments comments={props.comments} addComment={props.addComment}  dishId={props.dish.id}/>
+                        
                         </div>
                 </div>
                 </div>
