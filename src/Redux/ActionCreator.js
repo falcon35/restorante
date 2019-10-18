@@ -14,10 +14,24 @@ import {baseUrl} from '../shared/baseUrl';
 );
   export const fetchDishes=()=>(dispatch)=>{
     dispatch(dishesloading(true));
-   return fetch(baseUrl+'dishes')
-   .then(response=>response.json())
-   .then(dishes=>dispatch(addDishes(dishes)));
-    }
+    return fetch(baseUrl + 'dishes')
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+      })
+    .then(response => response.json())
+    .then(dishes => dispatch(addDishes(dishes)))
+    .catch(error => dispatch(dishesFailed(error.message)));
+}
   export const dishesloading=()=>({
  type:ActionTypes.DISHES_LOADING
   });
@@ -35,10 +49,24 @@ import {baseUrl} from '../shared/baseUrl';
   );
 
   export const fetchComments=()=>(dispatch)=>{
-   return fetch(baseUrl+'comments')
-   .then(response=>response.json())
-   .then(comments=>dispatch(addcomments(comments)));
-    }
+    return fetch(baseUrl + 'comments')
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+      })
+    .then(response => response.json())
+    .then(comments => dispatch(addcomments(comments)))
+    .catch(error => dispatch(commentsFailed(error.message)));
+};
     export const commentsFailed=(errmess)=>({
       type:ActionTypes.COMMENTS_FAILED,
       payload:errmess
@@ -52,10 +80,24 @@ import {baseUrl} from '../shared/baseUrl';
 
     export const fetchPromos=()=>(dispatch)=>{
       dispatch(promosloading());
-     return fetch(baseUrl+'promotions')
-     .then(response=>response.json())
-     .then(promos=>dispatch(addpromos(promos)));
-      }
+      return fetch(baseUrl + 'promotions')
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+      })
+    .then(response => response.json())
+    .then(promos => dispatch(addpromos(promos)))
+    .catch(error => dispatch(promosFailed(error.message)));
+}
     export const promosloading=()=>({
    type:ActionTypes.PROMOS_LOADING
     });
